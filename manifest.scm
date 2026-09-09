@@ -2,7 +2,12 @@
 ;;
 ;; Run:
 ;;
-;; guix shell -m manifest.scm -- sbcl
+;; guix shell -m manifest.scm
+;; export LD_LIBRARY_PATH="$GUIX_ENVIRONMENT/lib:$LD_LIBRARY_PATH"
+;; sbcl
+;;
+;; Note: sojrn-asdf-system extension handles LD_LIBRARY_PATH
+;; thereafter, i.e. once the system has been loaded the first time!
 ;;
 ;;
 
