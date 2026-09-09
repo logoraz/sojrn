@@ -1,18 +1,18 @@
 # root
+*.zip
+*.tar.gz
 /ocicl/*
+/todo/*
+/dist/*
 
-## source
-/core/ocicl/*
+## src
 
-## libraries
-/libraries/learncl/ocicl/*
-
-## files
-/files/ocicl/*
-/files/todo/*
 
 ## tests
-/tests/ocicl/*
 
-## distribution
-/dist/*
+
+## docs
+
+
+## contrib
+

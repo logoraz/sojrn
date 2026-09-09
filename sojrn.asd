@@ -1,11 +1,12 @@
 (defsystem "sojrn"
-  :description "Declarative dotfile/config deployment for Common Lisp."
+  :description "A Declarative Transactional Keeper of Secretes, Notes, & Config."
   :author "Erik P Almaraz <erikalmaraz@fastmail.com>"
   :license "GPL-2.0-only"
   :version (:read-file-form "version.sexp" :at (0 1))
   :defsystem-depends-on ("sojrn-asdf-system")
   :class :sojrn-asdf-system-extension
-  :depends-on ("bordeaux-threads"
+  :depends-on ("sojrn-asdf-system"
+               "bordeaux-threads"
                "cl-ppcre"
                "trivial-gray-streams"
                "osicat"
@@ -16,8 +17,8 @@
                "cl-cffi-graphene"
                "cl-cffi-pango"
                "cl-cffi-cairo"
-               ;; Internal Systems
-               "learn-cl")
+               ;; contrib's
+               "sojrn/contrib")
   :components
   ((:module "src"
     :components
@@ -31,7 +32,7 @@
       ((:file "config-manager")
        (:file "database"       :depends-on ("config-manager"))))
      (:module "ui"
-      :depends-on ("lib" "core") ; future depedencies
+      :depends-on ("lib" "core")        ; future depedencies
       :components
       ((:file "app")))
      (:file "persistence" :depends-on ("core" "lib"))
@@ -40,8 +41,7 @@
 
   :in-order-to ((test-op (test-op "sojrn/tests")))
   :long-description "
-Declarative dotfile/config deployment for Common Lisp, with persisted state
-tracking.
+A Declarative Transactional Keeper of Scecretds, Notes, & Config.
 ")
 
 
@@ -65,11 +65,6 @@ tracking.
 ;;;
 ;;; Subsystems
 
-(defsystem "sojrn/libraries"
-  :description "Extra libraries to bring in if needed"
-  :depends-on ("learn-cl"))
-
-
 (defsystem "sojrn/docs"
   :class :sojrn-doc-system
   :depends-on ("sojrn"))
@@ -83,10 +78,9 @@ tracking.
   ((:module "tests"
     :components
     ((:file "suite"))))
-  :perform (test-op (o c)
-                    (symbol-call :fiveam :run!
-                                 (find-symbol "SUITE" :sojrn/tests/suite))))
-
+  :perform (test-op (o c) (symbol-call :fiveam :run!
+                                       (find-symbol "SUITE"
+                                                    :sojrn/tests/suite))))
 
 (defsystem "sojrn/executable"
   :description "Build executable"
@@ -95,3 +89,18 @@ tracking.
   :build-operation "program-op"
   :build-pathname "dist/sojrn"
   :entry-point "sojrn:main")
+
+(defsystem "sojrn/contrib"
+  :description "Discover and register contrib modules for dynamic loading."
+  :perform
+  (load-op
+   (o c)
+   (let* ((root (asdf:system-source-directory "sojrn"))
+          (pat  (merge-pathnames "*/*.asd" (merge-pathnames "contrib/" root)))
+          (dirs (loop :for asd :in (directory pat)
+                      :collect (list :directory
+                                     (make-pathname
+                                      :directory (pathname-directory asd))))))
+     (asdf:initialize-source-registry
+      (list* :source-registry
+             (append dirs (list :inherit-configuration)))))))

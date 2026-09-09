@@ -9,9 +9,6 @@
                 #:*config-mgr*)
   (:use-reexport :sojrn/persistence
                  :sojrn/ui/app)
-  ;; Export Library Features
-  (:use-reexport :learn-cl/sdraw
-                 :learn-cl/dtrace)
   ;; Setup
   (:export #:*config-mgr*
            #:*config-spec*

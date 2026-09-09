@@ -1,7 +1,7 @@
-#+title: SOJRN: Declarative, Transactional Config/Dotfile Deployment in CL
+#+title: SOJRN: A Declarative Transactional  Keeper of Secrets, Notes, & Config
 #+author: logoraz
 #+date: 2026-08-06
-#+options: toc:nil
+#+options: num:nil
 #+startup: overview
 #+startup: inlineimages
 :meta:
@@ -10,193 +10,69 @@
 
 #+html: <p align="center"> <img src="assets/cl-icon.svg" width="200"/> </p>
 
-
-A Lisp-native dotfile/config deployment tool for keeping your Common Lisp tooling
-consistent across Linux and Windows.  Declarative source-to-target config mapping
-(add-config) with symlink/copy specs, backed by a cl-dbi-tracked SQL persistence
-layer, plus a GTK4 GUI frontend. Unlike a pure stateless symlink-farm tool, it
-tracks what's been deployed where, over time, in an actual database rather than
-just inferring state from the filesystem each run.
+A Lisp-native personal state manager — secrets, notes, and dotfiles/config, all
+declaratively tracked in a SQLite-backed database rather than scattered across
+plaintext files and ad-hoc tools. Originally built as a config/dotfile
+deployment tool; that piece still works and remains as a side feature, but the
+primary focus going forward is a password/secrets/notes manager — a
+self-built alternative to things like KeePassXC.
 
 PS: I am building this for my own use and my own amusement — not a bid for The
-One True Config/Dotfile Tool. Feel free to poke around, steal ideas, or use it
+One True [anything] Tool. Feel free to poke around, steal ideas, or use it
 yourself if it looks fun.
 
-** Build, Testing, & Configuration
+** Dependencies
 
-  Dependencies (see Guix manifest.scm for reference). Note these are generic
-  library dependencies; Linux users can install them via their distro's package
-  manager:
+  Dependencies (see Guix manifest.scm for reference). These are generic library
+  dependencies; Linux users can install them via their distro's package manager:
   - SBCL
   - [[https://github.com/ocicl/ocicl][ocicl]]
   - sqlite (libsqlite3)
-  - gtk
-  - pango
-  - cairo
-  - gdk-pixbuf
-  - graphene
-  - libffi
-  - pkg-config
-  - gcc-toolchain
-  - libfixposix
+  - gtk, pango, cairo, gdk-pixbuf, graphene
+  - libffi, pkg-config, gcc-toolchain, libfixposix
 
+  [[https://github.com/ocicl/ocicl][ocicl]] handles CL dependencies, however, you need to git install the following:
 
-[[https://github.com/ocicl/ocicl][ocicl]] is a modern approach for Common Lisp Systems Management. It even supports
-vendored sources, which this project currently needs, i.e. =cl-cffi-gtk4= and
-=cl-cffi-gdk-pixbuf=, all other CL dependencies are handled by ocicl.
+  #+begin_src bash
 
+    # project root
+    ocicl install git+https://github.com/crategus/cl-cffi-gtk4@master
+    ocicl install git+https://github.com/crategus/cl-cffi-gdk-pixbuf
+    ocicl install git+https://github.com/logoraz/sojrn-asdf-system
 
-*** Build & Test
+  #+end_src
 
-First install sbcl and run =bootstrap.lisp=, which setup up a symlink for the
-specially configured sbcl configuration file (=.sbclrc=) tailored for this
-project. Next install =ocicl=. Vendoring of =cl-cffi-gtk4= and =cl-cffi-gdk-pixbuf= are
-handled in =bootstrap.lisp=. The sojrn system load/build is supported by
-=:sojrn-package-inferred-system= class which sets up the CFFI environment setting
-=LD_LIBRARY_PATH= for both Linux and Windows. This is implmented in the ASDF system
-extension =sojrn-asdf-system=.
+** Installation & Usage (WIP)
 
-The document generation system automates api listing listing functions and their
-associated docstrings. More to come on more comprehensive documentation
-generation.
-
-The executable build system is handled by the subsystem =:sojrn/executable= and
-whose inner workings are implmented in our ASDF extension system
-=sojrn-asdf-system= class =:sojrn-exec-system=.
-
-#+begin_src lisp
-
-  ;; Build System
-  (asdf:load-system "sojrn")
-
-  ;; Test System
-  (asdf:test-system "sojrn")
-
-  ;; Generate Documentation (WIP)
-  (asdf:load-system "sojrn-docs")
-
-  ;; Create Executable (WIP)
-  (asdf:make "sojrn/executable")
-
-  ;; Build Libraries/Extensions (WIP)
-  (asdf:load-system "sojrn/libraries")
-
-#+end_src
-
-
-*** Configuration Manager
-
-The config-manager declaratively maps source files to deployment targets via
-=add-config= — =manager=, =name=, =source=, =target=, plus a =:spec (symlink or copy)= and =:type=. It
-validates the source exists before accepting the entry, warning rather than
-failing if it doesn't. =database.lisp= backs it with a =cl-dbi= database, so
-deployment state is tracked over time rather than re-inferred from the filesystem
-each run. =startup.lisp= holds the actual per-machine declarations — the manager
-itself is generic, =startup.lisp= establishes the policy.
-
-First edit/modify =*config-spec*= to your specific dotfile/config specifications
-and then deploy (the default manager instance is defined in =*config-mgr*=):
-
-#+begin_src lisp
-
-  ;; Apply your own config specification
-  #+(or)
-  (setf *config-spec*
-  '(("Your SBCL Config"
-     "path/to/source/.sbclrc.lisp" "~/.sbclrc"
-     :spec :symlink :type :file)))
-
-  ;; Defaults
-
-  ;; cd to ~/Work/sojrn/ (or location of this repo)
-  (asdf:load-system "sojrn")
-  ;; First visualize your deployment plan
-  (sojrn:outline sojrn:*config-mgr*)
-  ;; Deploy!
-  (sojrn:deploy sojrn:*config-mgr*)
-
-#+end_src
-
-
-*** GTK4 UI (WIP)
-
-Currently working on establishing a gtk4 frontend using =cl-cffi-gtk4=.
-
-Note: ocicl will install most of the dependencies, however, currently =cl-cffi-gtk4=
-is not building upstream, so it needs to be vendored in =ocicl/= manually along with
-=cl-cffi-gdk-pixbuf=.
-
-Then you can run the currently simple UI as follows:
-
-#+begin_src lisp
-
-  ;; Re-run to finish building successfully
-  (asdf:load-system "sojrn")
-  (sojrn:main)
-
-#+end_src
-
-
-
-*** Play & Learn
-
-As a fun exercise of incorporating a library, I adapted the =SDRAW= and =DTRACE= tools from
-the book 
-[[https://www.cs.cmu.edu/~dst/LispBook/][Common Lisp: A Gentle Introduction to Symbolic Computation]].
-This is staged in the system/library =learn-cl=. For example, you can run the =sdraw=
-learning tool (a cons cell visual aid) in this project as follows:
-
-#+begin_src lisp
-
-  (sojrn:sdraw '(This (is a (test!))))
-
-  ;; =>
-  ;; [*|*]--->[*|*]--->NIL
-  ;;  |        |
-  ;;  v        v
-  ;; THIS     [*|*]--->[*|*]--->[*|*]--->NIL
-  ;;           |        |        |
-  ;;           v        v        v
-  ;;           IS       A       [*|*]--->NIL
-  ;;                             |
-  ;;                             v
-  ;;                            TEST!
-
-#+end_src
-
-
-** Roadmap
-
- - [X] Build configuration manager system
- - [X] Incorporate config-manager persistence via sqlite
- - [X] Begin Scaffolding GTK4 UI System
- - [X] Build a documentation system
- - [ ] Extend Configuration Manager to build/deploy external systems
- - [ ] Build a GTK4 GUI config system inspector
- - [ ] Build a CLI executable for deployment system (?)
- - [ ] Build a CL ASDF package-inferred-system scaffolding tool (?)
-
+  Actively under construction...
 
 ** References:
 
   - [[https://github.com/ocicl/ocicl][ocicl]] — Common Lisp system manager used throughout this project.
+  - [[https://github.com/logoraz/sojrn-asdf-system][sojrn-asdf-system]] - Custom ASDF system extension for docs and executable generation
+  - [[https://github.com/sionescu/bordeaux-threads][bordeaux-threads]] — portable threading, used for the session
+    lock and background connection thread.
+  - [[https://github.com/edicl/cl-ppcre][cl-ppcre]] — regular expressions, used in =ansi-color.lisp=.
+  - [[https://github.com/trivial-gray-streams/trivial-gray-streams][trivial-gray-streams]] — Gray streams portability layer, used in
+    =ansi-color.lisp='s colored-output stream class.
+  - [[https://github.com/skypeeker/osicat][osicat]] — POSIX bindings used by =config-manager.lisp=.
+  - [[https://github.com/fukamachi/cl-dbi][cl-dbi]] — database abstraction layer backing =database.lisp=.
   - [[https://github.com/crategus/cl-cffi-gtk4][cl-cffi-gtk4]] and its sibling libraries:
     - [[https://github.com/crategus/cl-cffi-gdk-pixbuf][cl-cffi-gdk-pixbuf]]
     - [[https://github.com/crategus/cl-cffi-glib][cl-cffi-glib]],
     - [[https://github.com/crategus/cl-cffi-cairo][cl-cffi-cairo]],
     - [[https://github.com/crategus/cl-cffi-pango][cl-cffi-pango]],
     - [[https://github.com/crategus/cl-cffi-graphene][cl-cffi-graphene]],
-  - [[https://github.com/sionescu/fiveam][FiveAM]] — the testing framework backing =sojrn-tests=.
-  - [[https://github.com/3b/3bmd][3bmd]] — Markdown rendering used by =sojrn-docs='s generator.
+  - [[https://github.com/sionescu/fiveam][FiveAM]] — the testing framework backing =sojrn/tests=.
+  - [[https://github.com/3b/3bmd][3bmd]] — Markdown rendering used by =sojrn-asdf-system='s doc generator.
   - [[https://www.cs.cmu.edu/~dst/LispBook/][Common Lisp: A Gentle Introduction to Symbolic Computation]]
     - source for the =sdraw=/=dtrace= learning tools in =learn-cl=.
   - [[https://guix.gnu.org/][GNU Guix]] - The system this project was develop on
     — the environment =manifest.scm= targets.
 
-
 ** License
 
-  Licensed under the [[https://www.apache.org/licenses/LICENSE-2.0][Apache-2.0]], fork it, sell it, build an empire on it, just
-  don't sue me over patents and leave the copyright notice where you found it!
+  Licensed under the [[https://www.gnu.org/licenses/old-licenses/gpl-2.0.html][GPL-2.0-only]] — fork it, hack it, ship it, just keep it free:
+  any derivative you distribute stays GPL-2.0 and keeps its source open too.
 
   See =LICENSE= for the full text.
