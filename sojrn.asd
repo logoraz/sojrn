@@ -1,8 +1,8 @@
 (defsystem "sojrn"
-  :description "A Declarative Transactional Keeper of Secretes, Notes, & Config."
+  :description "A Declarative Transactional Keeper of Secrets, Notes, & Config."
   :author "Erik P Almaraz <erikalmaraz@fastmail.com>"
-  :license "GPL-2.0-only"
-  :version (:read-file-form "version.sexp" :at (0 1))
+  :license "LGPL-2.1-only WITH LLGPL"
+  :version (:read-file-form "data/version.sexp" :at (0 1))
   :defsystem-depends-on ("sojrn-asdf-system")
   :class :sojrn-asdf-system-extension
   :depends-on ("sojrn-asdf-system"
@@ -41,7 +41,7 @@
 
   :in-order-to ((test-op (test-op "sojrn/tests")))
   :long-description "
-A Declarative Transactional Keeper of Scecretds, Notes, & Config.
+A Declarative Transactional Keeper of Scecrets, Notes, & Config.
 ")
 
 
