@@ -95,11 +95,6 @@ A Declarative Transactional Keeper of Scecretds, Notes, & Config.
   (load-op
    (o c)
    (let* ((root (asdf:system-source-directory "sojrn"))
-          (pat  (merge-pathnames "*/*.asd" (merge-pathnames "contrib/" root)))
-          (dirs (loop :for asd :in (directory pat)
-                      :collect (list :directory
-                                     (make-pathname
-                                      :directory (pathname-directory asd))))))
-     (asdf:initialize-source-registry
-      (list* :source-registry
-             (append dirs (list :inherit-configuration)))))))
+          (pat  (merge-pathnames "*/*.asd" (merge-pathnames "contrib/" root))))
+     (dolist (asd (directory pat))
+       (asdf:load-asd asd)))))
