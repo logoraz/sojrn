@@ -19,25 +19,25 @@
                "cl-cffi-cairo"
                ;; contrib's
                "sojrn/contrib")
-  :components
-  ((:module "src"
-    :components
-    ((:module "lib"
-      :components
-      ((:file "syntax")
-       (:file "ansi-color" :depends-on ("syntax"))))
-     (:module "core"
-      :depends-on ("lib")
-      :components
-      ((:file "config-manager")
-       (:file "database"       :depends-on ("config-manager"))))
-     (:module "ui"
-      :depends-on ("lib" "core")        ; future depedencies
-      :components
-      ((:file "app")))
-     (:file "persistence" :depends-on ("core" "lib"))
-     (:file "startup"     :depends-on ("core" "persistence"))
-     (:file "sojrn"       :depends-on ("startup" "persistence" "ui")))))
+  :components ((:module "lib"
+                :pathname "code/lib"
+                :components ((:file "syntax")
+                             (:file "ansi-color" :depends-on ("syntax"))))
+               (:module "base"
+                :pathname "code/base"
+                :depends-on ("lib")
+                :components ((:file "config-manager")
+                             (:file "database" :depends-on ("config-manager"))))
+               (:module "ui"
+                :pathname "code/ui"
+                :depends-on ("lib" "base")        ; future depedencies
+                :components ((:file "app")))
+               (:module "application"
+                :pathname "code"
+                :depends-on ("base" "lib" "ui")
+                :components ((:file "persistence")
+                             (:file "startup" :depends-on ("persistence"))
+                             (:file "sojrn"   :depends-on ("startup")))))
 
   :in-order-to ((test-op (test-op "sojrn/tests")))
   :long-description "
@@ -76,8 +76,7 @@ A Declarative Transactional Keeper of Scecretds, Notes, & Config.
                "fiveam")
   :components
   ((:module "tests"
-    :components
-    ((:file "suite"))))
+    :components ((:file "suite"))))
   :perform (test-op (o c) (symbol-call :fiveam :run!
                                        (find-symbol "SUITE"
                                                     :sojrn/tests/suite))))

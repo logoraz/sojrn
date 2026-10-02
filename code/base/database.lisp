@@ -1,6 +1,5 @@
-(uiop:define-package :sojrn/core/database
-  (:use :cl
-        :sojrn/core/config-manager)
+(uiop:define-package :sojrn/base/database
+  (:use :cl :sojrn/base/config-manager)
   (:import-from :uiop/filesystem
                 #:ensure-all-directories-exist)
   (:import-from :uiop/configuration
@@ -35,7 +34,7 @@ This module provides:
 Requires: cl-dbi (SQLite3 backend)
 "))
 
-(in-package :sojrn/core/database)
+(in-package :sojrn/base/database)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -59,7 +58,7 @@ Requires: cl-dbi (SQLite3 backend)
        status TEXT NOT NULL DEFAULT 'pending',
        notes TEXT
      )"
-    
+
     "CREATE TABLE IF NOT EXISTS deployment_actions (
        id INTEGER PRIMARY KEY AUTOINCREMENT,
        deployment_id INTEGER NOT NULL,
@@ -72,14 +71,14 @@ Requires: cl-dbi (SQLite3 backend)
        error_message TEXT,
        FOREIGN KEY (deployment_id) REFERENCES deployments(id)
      )"
-    
+
     "CREATE TABLE IF NOT EXISTS config_snapshots (
        id INTEGER PRIMARY KEY AUTOINCREMENT,
        name TEXT NOT NULL,
        created_at TEXT NOT NULL DEFAULT (datetime('now')),
        description TEXT
      )"
-    
+
     "CREATE TABLE IF NOT EXISTS snapshot_configs (
        id INTEGER PRIMARY KEY AUTOINCREMENT,
        snapshot_id INTEGER NOT NULL,
@@ -90,11 +89,11 @@ Requires: cl-dbi (SQLite3 backend)
        type TEXT NOT NULL,
        FOREIGN KEY (snapshot_id) REFERENCES config_snapshots(id)
      )"
-    
-    "CREATE INDEX IF NOT EXISTS idx_deployment_timestamp 
+
+    "CREATE INDEX IF NOT EXISTS idx_deployment_timestamp
        ON deployments(timestamp DESC)"
-    
-    "CREATE INDEX IF NOT EXISTS idx_actions_deployment 
+
+    "CREATE INDEX IF NOT EXISTS idx_actions_deployment
        ON deployment_actions(deployment_id)")
   "SQL statements to initialize the database schema.")
 
@@ -137,7 +136,7 @@ then update action statuses as deployment proceeds."
     ;; Record each config as a pending action
     (dolist (config (configs manager))
       (db:do-sql *db-connection*
-        "INSERT INTO deployment_actions 
+        "INSERT INTO deployment_actions
            (deployment_id, config_name, source_path, dest_path, spec, type)
          VALUES (?, ?, ?, ?, ?, ?)"
         (list deployment-id
@@ -216,7 +215,7 @@ then update action statuses as deployment proceeds."
             (list name description))))
     (dolist (config (configs manager))
       (db:do-sql *db-connection*
-        "INSERT INTO snapshot_configs 
+        "INSERT INTO snapshot_configs
            (snapshot_id, config_name, source_path, dest_path, spec, type)
          VALUES (?, ?, ?, ?, ?, ?)"
         (list snapshot-id
@@ -269,7 +268,7 @@ If DRY-RUN is true, only report what would be done."
   (let ((deployment (get-deployment-by-id deployment-id)))
     (unless deployment
       (error "Deployment ~A not found" deployment-id))
-    
+
     (let ((actions (getf deployment :actions))
           (rolled-back 0))
       (dolist (action (reverse actions))
@@ -282,12 +281,12 @@ If DRY-RUN is true, only report what would be done."
                 (progn
                   (delete-file dest)
                   (incf rolled-back))))))
-      
+
       (unless dry-run
         (db:do-sql *db-connection*
           "UPDATE deployments SET status = 'rolled_back' WHERE id = ?"
           (list deployment-id)))
-      
+
       (values rolled-back (length actions)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

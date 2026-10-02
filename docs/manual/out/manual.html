@@ -146,7 +146,38 @@ Set DRY-RUN to NIL to actually perform the rollback.</p>
 
 <p>Base system class for Sojrn.</p>
 
-<h2>Package SOJRN/CORE/DATABASE</h2>
+<h2>Package SOJRN-ASDF-SYSTEM/EXEC-HOOKS</h2>
+
+<h2>Package SOJRN-ASDF-SYSTEM/DOCS</h2>
+
+<h3><code>BUILD-DOCS</code> (function)</h3>
+
+<p>Documentation builder for SYSTEM, driven by its primary system name.</p>
+
+<h3><code>GENERATE-API-MD</code> (function)</h3>
+
+<p>Generate an API reference in Markdown by extracting docstrings
+from PACKAGES and writing them to OUTPUT-FILE.</p>
+
+<h2>Package SOJRN</h2>
+
+<h3><code>MAIN</code> (function)</h3>
+
+<p>Main entry point for the executable.</p>
+
+<h2>Package SOJRN/LIB/SYNTAX</h2>
+
+<h3><code>CONCAT</code> (function)</h3>
+
+<p>Shorthand for CONCATENATE specialized for strings.</p>
+
+<h2>Package SOJRN/UI/APP</h2>
+
+<h3><code>SOJRN-APP</code> (function)</h3>
+
+<p>Create and run a minimal GTK4 application window with a close button.</p>
+
+<h2>Package SOJRN/BASE/DATABASE</h2>
 
 <h3><code>RECORD-DEPLOYMENT</code> (function)</h3>
 
@@ -200,20 +231,7 @@ Automatically handles connection opening and closing. PATH is required.</p>
 
 <p>Save current manager configuration as a named snapshot.</p>
 
-<h2>Package SOJRN-ASDF-SYSTEM/EXEC-HOOKS</h2>
-
-<h2>Package SOJRN-ASDF-SYSTEM/DOCS</h2>
-
-<h3><code>BUILD-DOCS</code> (function)</h3>
-
-<p>Documentation builder for SYSTEM, driven by its primary system name.</p>
-
-<h3><code>GENERATE-API-MD</code> (function)</h3>
-
-<p>Generate an API reference in Markdown by extracting docstrings
-from PACKAGES and writing them to OUTPUT-FILE.</p>
-
-<h2>Package SOJRN/CORE/CONFIG-MANAGER</h2>
+<h2>Package SOJRN/BASE/CONFIG-MANAGER</h2>
 
 <h3><code>CLEAR-CONFIGS</code> (function)</h3>
 
@@ -305,26 +323,6 @@ of the configs added, in SPEC's order.</p>
   OVERWRITE - If true (default), overwrite existing files</p>
 
 <p>Creates DEST if it doesn't exist. Copies all files and subdirectories.</p>
-
-<h2>Package SOJRN</h2>
-
-<h3><code>MAIN</code> (function)</h3>
-
-<p>Main entry point for the executable.</p>
-
-<h2>Package SOJRN/LIB/SYNTAX</h2>
-
-<h3><code>CONCAT</code> (function)</h3>
-
-<p>Shorthand for CONCATENATE specialized for strings.</p>
-
-<h2>Package SOJRN/UI/APP</h2>
-
-<h3><code>SOJRN-APP</code> (function)</h3>
-
-<p>Create and run a minimal GTK4 application window with a close button.</p>
-
-<h2>Package SOJRN/TESTS/SUITE</h2>
 
 <h1>SOJRN System Internals</h1>
 

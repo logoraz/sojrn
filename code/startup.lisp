@@ -1,7 +1,7 @@
 (uiop:define-package :sojrn/startup
   (:use :cl
-        :sojrn/core/config-manager
-        :sojrn/core/database
+        :sojrn/base/config-manager
+        :sojrn/base/database
         :sojrn/persistence)
   ;; User Config API
   (:export #:*config-mgr*

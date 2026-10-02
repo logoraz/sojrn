@@ -1,7 +1,7 @@
 (uiop:define-package :sojrn/persistence
   (:use :cl
-        :sojrn/core/config-manager
-        :sojrn/core/database
+        :sojrn/base/config-manager
+        :sojrn/base/database
         :sojrn/lib/ansi-color)
   ;; Basic Setup
   (:export #:outline

@@ -115,7 +115,33 @@ System class for Sojrn documentation generation.
 ### `SOJRN-ASDF-SYSTEM-EXTENSION` (type)
 Base system class for Sojrn.
 
-## Package SOJRN/CORE/DATABASE
+## Package SOJRN-ASDF-SYSTEM/EXEC-HOOKS
+
+## Package SOJRN-ASDF-SYSTEM/DOCS
+
+### `BUILD-DOCS` (function)
+Documentation builder for SYSTEM, driven by its primary system name.
+
+### `GENERATE-API-MD` (function)
+Generate an API reference in Markdown by extracting docstrings
+from PACKAGES and writing them to OUTPUT-FILE.
+
+## Package SOJRN
+
+### `MAIN` (function)
+Main entry point for the executable.
+
+## Package SOJRN/LIB/SYNTAX
+
+### `CONCAT` (function)
+Shorthand for CONCATENATE specialized for strings.
+
+## Package SOJRN/UI/APP
+
+### `SOJRN-APP` (function)
+Create and run a minimal GTK4 application window with a close button.
+
+## Package SOJRN/BASE/DATABASE
 
 ### `RECORD-DEPLOYMENT` (function)
 Record a new deployment from MANAGER, returning the deployment ID.
@@ -158,18 +184,7 @@ Load a snapshot into MANAGER, replacing current configs.
 ### `SAVE-CONFIG-SNAPSHOT` (function)
 Save current manager configuration as a named snapshot.
 
-## Package SOJRN-ASDF-SYSTEM/EXEC-HOOKS
-
-## Package SOJRN-ASDF-SYSTEM/DOCS
-
-### `BUILD-DOCS` (function)
-Documentation builder for SYSTEM, driven by its primary system name.
-
-### `GENERATE-API-MD` (function)
-Generate an API reference in Markdown by extracting docstrings
-from PACKAGES and writing them to OUTPUT-FILE.
-
-## Package SOJRN/CORE/CONFIG-MANAGER
+## Package SOJRN/BASE/CONFIG-MANAGER
 
 ### `CLEAR-CONFIGS` (function)
 Remove all config entries.
@@ -244,21 +259,4 @@ Keywords:
   OVERWRITE - If true (default), overwrite existing files
 
 Creates DEST if it doesn't exist. Copies all files and subdirectories.
-
-## Package SOJRN
-
-### `MAIN` (function)
-Main entry point for the executable.
-
-## Package SOJRN/LIB/SYNTAX
-
-### `CONCAT` (function)
-Shorthand for CONCATENATE specialized for strings.
-
-## Package SOJRN/UI/APP
-
-### `SOJRN-APP` (function)
-Create and run a minimal GTK4 application window with a close button.
-
-## Package SOJRN/TESTS/SUITE
 

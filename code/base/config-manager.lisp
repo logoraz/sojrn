@@ -1,4 +1,4 @@
-(uiop:define-package :sojrn/core/config-manager
+(uiop:define-package :sojrn/base/config-manager
   (:use :cl
         :sojrn/lib/ansi-color)
   (:import-from :osicat
@@ -40,7 +40,7 @@
            #:deployment-error)
   (:documentation "CLOS-based Configuration Manager"))
 
-(in-package :sojrn/core/config-manager)
+(in-package :sojrn/base/config-manager)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -53,7 +53,7 @@
 (define-condition source-not-found (warning)
   ((path :initarg :path :reader source-not-found-path))
   (:report (lambda (c stream)
-             (format stream "Source path does not exist: ~A" 
+             (format stream "Source path does not exist: ~A"
                      (source-not-found-path c)))))
 
 (define-condition deployment-error (config-error)
@@ -168,8 +168,8 @@ of the configs added, in SPEC's order."
 
 (defmethod find-config ((manager config-manager) (name string))
   "Find config by name (case-insensitive)."
-  (find name (configs manager) 
-        :key #'config-name 
+  (find name (configs manager)
+        :key #'config-name
         :test #'string-equal))
 
 (defmethod config-count ((manager config-manager))
@@ -208,11 +208,11 @@ Returns a list of performed actions:
         (format verbose "~%~A~ANo configurations to deploy.~A~%"
                 (color :bold) (color :yellow) (color :reset)))
       (return-from deploy-configs nil))
-    
+
     (when verbose
       (format verbose "~%~A~ADeploying Configuration ...~A~%~%"
               (color :bold) (color :green) (color :reset)))
-    
+
     (dolist (obj (reverse (configs manager)))
       (incf count)
       (let ((src (config-source obj))
@@ -222,27 +222,27 @@ Returns a list of performed actions:
             (status :success)
             (error-msg nil)
             (do-backup (backup-on-overwrite-p manager)))
-        
+
         (handler-case
             (progn
               ;; Ensure destination directory exists
               (ensure-directories-exist (directory-namestring dst))
-              
+
               ;; Perform the deployment action
               (ecase spec
                 (:symlink
-                 (create-symlink src dst 
+                 (create-symlink src dst
                                  :dir (eq type :directory)
                                  :overwrite t
                                  :backup do-backup))
                 (:copy
                  ;; Handle backup for copy operations
-                 (when (and do-backup 
+                 (when (and do-backup
                             (u:file-exists-p dst)
                             (not (symlinkp dst)))
-                   (let ((backup (make-pathname 
+                   (let ((backup (make-pathname
                                   :defaults dst
-                                  :type (format nil "~A.bak" 
+                                  :type (format nil "~A.bak"
                                                 (or (pathname-type dst) "")))))
                      (ufs:rename-file-overwriting-target dst backup)))
                  ;; Remove existing symlink if destination is a symlink
@@ -252,17 +252,17 @@ Returns a list of performed actions:
                  (if (eq type :directory)
                      (copy-directory src dst :overwrite t)
                      (u:copy-file src dst)))))
-          
+
           (error (e)
             (setf status :failed
                   error-msg (princ-to-string e))
             (incf errors)))
-        
+
         (push (list spec src dst status error-msg) results)
-        
+
         (when verbose
           (format verbose "~A[~A~D/~D~A] ~A~A ~A~A ~A~A~A~%"
-                  (color :grey) 
+                  (color :grey)
                   (if (eq status :success) (color :green) (color :red))
                   count total (color :grey)
                   (if (eq type :file) (color :yellow) (color :red))
@@ -274,7 +274,7 @@ Returns a list of performed actions:
           (when error-msg
             (format verbose "~A    Error: ~A~A~%"
                     (color :red) error-msg (color :reset))))))
-    
+
     (let ((actions (nreverse results)))
       (when verbose
         (format verbose "~%~A~ADeployment complete: ~A~D~A action~:P, ~A~D~A error~:P~A~%"
@@ -323,7 +323,7 @@ Returns a list of performed actions:
     (u:ensure-pathname
      (cond
        ;; Bare ~ means home directory
-       ((string= str "~") 
+       ((string= str "~")
         home)
        ;; ~/... expands to home + rest
        ((and (>= (length str) 2)
@@ -382,9 +382,9 @@ Signals an error if LINK exists and OVERWRITE is NIL."
         (error "Link destination already exists: ~A" link))
       ;; Backup regular files if requested (symlinks just get replaced)
       (when (and backup (not (symlinkp link)))
-        (let ((backup-path (make-pathname 
+        (let ((backup-path (make-pathname
                             :defaults link
-                            :type (format nil "~A.bak" 
+                            :type (format nil "~A.bak"
                                           (or (pathname-type link) "")))))
           (ufs:rename-file-overwriting-target link backup-path)))
       ;; Remove existing symlink or file
@@ -407,20 +407,20 @@ Creates DEST if it doesn't exist. Copies all files and subdirectories."
         (dest-dir (u:ensure-directory-pathname dest)))
     ;; Ensure destination exists
     (ensure-directories-exist dest-dir)
-    
+
     ;; Copy all files in the source directory
     (dolist (file (u:directory-files source-dir))
       (let* ((filename (file-namestring file))
              (dest-file (merge-pathnames filename dest-dir)))
         (when (or overwrite (not (u:file-exists-p dest-file)))
           (u:copy-file file dest-file))))
-    
+
     ;; Recursively copy subdirectories
     (dolist (subdir (u:subdirectories source-dir))
       (let* ((dirname (first (last (pathname-directory subdir))))
-             (dest-subdir (merge-pathnames 
+             (dest-subdir (merge-pathnames
                            (make-pathname :directory (list :relative dirname))
                            dest-dir)))
         (copy-directory subdir dest-subdir :overwrite overwrite)))
-    
+
     dest-dir))
