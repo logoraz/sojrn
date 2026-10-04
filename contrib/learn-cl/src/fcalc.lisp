@@ -1,4 +1,4 @@
-(defpackage #:learn-cl/fcalc
+(uiop:define-package #:learn-cl/fcalc
   (:use #:cl)
   (:export #:make-calculator
            #:add!
@@ -10,8 +10,7 @@
   (:documentation "A functional calculator example in CL"))
 (in-package #:learn-cl/fcalc)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
+
 ;;; Functional Calculator Definition
 
 ;; See: https://gigamonkeys.com/book/functions
@@ -55,10 +54,7 @@
     result))
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; Notes on Computational Complexity and Recursion
-;;;
 
 ;; True Ackermann
 (defun ackermann (m n)

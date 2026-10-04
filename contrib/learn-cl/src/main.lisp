@@ -1,4 +1,4 @@
-(defpackage :learn-cl/main
+(uiop:define-package :learn-cl/main
   (:use :cl)
   (:import-from :learn-cl/sdraw
                 #:sdraw)

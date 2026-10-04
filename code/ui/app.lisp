@@ -15,11 +15,9 @@
                 #:application-run)
   (:export #:sojrn-app)
   (:documentation "Main renderer application package."))
-
 (in-package :sojrn/ui/app)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
+
 ;;; Define GTK4 Application
 
 (defun sojrn-app ()
@@ -51,7 +49,5 @@
           (setf (widget-visible window) t))))
     (application-run app nil)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; Public API
 
+;;; Public API

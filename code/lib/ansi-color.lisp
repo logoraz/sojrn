@@ -1,9 +1,13 @@
 (uiop:define-package :sojrn/lib/ansi-color
-  (:use :cl
-        :sojrn/lib/syntax
-        :trivial-gray-streams)
+  (:use :cl)
+  (:import-from :sojrn/lib/syntax
+                #:concat)
   (:import-from :cl-ppcre
                 #:regex-replace-all)
+  (:import-from :trivial-gray-streams
+                #:fundamental-character-output-stream
+                #:stream-write-string
+                #:stream-write-char)
   ;; Class/Methods
   (:export #:colored-stream
            #:target
@@ -15,11 +19,9 @@
            #:arrow
            #:strip-ansi)
   (:documentation "ANSI Color support for CLI."))
-
 (in-package :sojrn/lib/ansi-color)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
+
 ;;; ANSI Color Support
 
 (defparameter *esc* (string (code-char 27))
@@ -54,8 +56,7 @@
   "Remove ANSI escape codes from string S."
   (regex-replace-all "\\[[0-9;]*m" s ""))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
+
 ;;; Modified Stream Class & Methods
 
 (defclass colored-stream (trivial-gray-streams:fundamental-character-output-stream)
@@ -73,4 +74,3 @@
 (defmethod trivial-gray-streams:stream-write-char ((stream colored-stream) char)
   "Fallback: write single character directly."
   (write-char char (target stream)))
-

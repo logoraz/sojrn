@@ -1,4 +1,4 @@
-(defpackage #:learn-cl/scalc
+(uiop:define-package #:learn-cl/scalc
   (:use #:cl)
   (:export #:make-calculator
            #:add
@@ -9,8 +9,7 @@
   (:documentation "A CLOS calculator example"))
 (in-package #:learn-cl/scalc)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
+
 ;;; CLOS Calculator Definition
 
 (defclass calculator ()

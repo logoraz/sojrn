@@ -39,11 +39,9 @@
            #:source-not-found
            #:deployment-error)
   (:documentation "CLOS-based Configuration Manager"))
-
 (in-package :sojrn/base/config-manager)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
+
 ;;; Conditions
 
 (define-condition config-error (error)
@@ -64,8 +62,7 @@
                      (config-name (config-error-config c))
                      (deployment-error-reason c)))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
+
 ;;; Classes
 
 (defclass config-object ()
@@ -90,8 +87,7 @@
                         :documentation "Create backups before overwriting existing files"))
   (:documentation "Manages a collection of config-object entries."))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
+
 ;;; Interface (Generic Functions)
 
 (defgeneric add-config (manager name source place &key spec type validate)
@@ -115,8 +111,7 @@
 (defgeneric config-count (manager)
   (:documentation "Return the number of configs."))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
+
 ;;; Methods/Public API (Core Behavior)
 
 (defmethod add-config ((manager config-manager) name source place
@@ -309,8 +304,7 @@ Returns a list of performed actions:
             (color :grey)))
   (write-string (color :reset) stream))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
+
 ;;; Helper Functions/Macros/Utilities
 
 (defun expand-pathname (pathspec)

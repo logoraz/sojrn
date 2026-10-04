@@ -33,21 +33,16 @@ This module provides:
 
 Requires: cl-dbi (SQLite3 backend)
 "))
-
 (in-package :sojrn/base/database)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
+
 ;;;  Database Configuration
-;;;
 
 (defparameter *db-connection* nil
   "Current database connection (dynamically bound).")
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
+
 ;;; Schema Definition
-;;;
 
 (defparameter *schema*
   '("CREATE TABLE IF NOT EXISTS deployments (
@@ -97,10 +92,8 @@ Requires: cl-dbi (SQLite3 backend)
        ON deployment_actions(deployment_id)")
   "SQL statements to initialize the database schema.")
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
+
 ;;; Database Connection Management
-;;;
 
 (defmacro with-database ((path) &body body)
   "Execute BODY with a database connection bound to *db-connection*.
@@ -118,10 +111,8 @@ Automatically handles connection opening and closing. PATH is required."
     (format t "~%Database initialized at: ~A~%~%" path)
     (format nil "Database initialized at: ~A~%" path)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
+
 ;;; Deployment Recording
-;;;
 
 (defun record-deployment (manager &key notes)
   "Record a new deployment from MANAGER, returning the deployment ID.
@@ -159,10 +150,8 @@ then update action statuses as deployment proceeds."
     "UPDATE deployments SET status = ? WHERE id = ?"
     (list status deployment-id)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
+
 ;;; History Queries
-;;;
 
 (defun get-deployment-history (&key (limit 20) (offset 0))
   "Get recent deployment history."
@@ -202,10 +191,8 @@ then update action statuses as deployment proceeds."
     (when row
       (get-deployment-by-id (getf row :|id|)))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
+
 ;;; Configuration Snapshots
-;;;
 
 (defun save-config-snapshot (manager name &key description)
   "Save current manager configuration as a named snapshot."
@@ -254,10 +241,8 @@ then update action statuses as deployment proceeds."
        LIMIT ?")
     (list limit))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
+
 ;;; Rollback Support
-;;;
 
 (defun rollback-deployment (deployment-id &key dry-run)
   "Attempt to rollback a deployment by reversing its actions.
@@ -289,10 +274,8 @@ If DRY-RUN is true, only report what would be done."
 
       (values rolled-back (length actions)))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
+
 ;;; Integration with config-manager
-;;;
 
 (defun deploy-with-history (manager &key notes verbose)
   "Deploy configurations and record in database.

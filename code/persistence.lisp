@@ -15,11 +15,9 @@
            #:load-snapshot
            #:snapshots)
   (:documentation "Deployment lifecycle: deploy, track, roll-back, snapshot."))
-
 (in-package :sojrn/persistence)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
+
 ;;; Deploy config-objects (Original - no persistence)
 
 (defun outline (mgr)
@@ -36,8 +34,7 @@
   (let ((stream (make-instance 'colored-stream :target *standard-output*)))
     (deploy-configs mgr stream)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
+
 ;;; Deploy with Persistence
 
 (defun deploy-and-record (path mgr &key (notes nil))
@@ -56,8 +53,7 @@ Example:
         (format stream "~%Deployment ID: ~A, Status: ~A~%" deployment-id status)
         (values deployment-id status)))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
+
 ;;; History & Rollback
 
 (defun history (path &key (limit 10))
@@ -96,8 +92,7 @@ Example:
           (format t "~%Rolled back ~A of ~A actions.~%" rolled-back total))
       (values rolled-back total))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
+
 ;;; Snapshots - Save/Load Configuration Sets
 
 (defun save-snapshot (path mgr name &key (description nil))
@@ -146,8 +141,7 @@ Example:
       (format t "~%")
       snaps)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
+
 ;;; Database Initialization (Run once)
 
 (defun init-db (path)

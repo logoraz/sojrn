@@ -1,6 +1,6 @@
 (defsystem "sojrn"
   :description "A Declarative Transactional Keeper of Secrets, Notes, & Config."
-  :author "Erik P Almaraz <erikalmaraz@fastmail.com>"
+  :author "Erik P Almaraz"
   :license "LGPL-2.1-only WITH LLGPL"
   :version (:read-file-form "data/version.sexp" :at (0 1))
   :defsystem-depends-on ("sojrn-asdf-system")
@@ -45,8 +45,6 @@ A Declarative Transactional Keeper of Scecrets, Notes, & Config.
 ")
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; Register System Names/Aliases
 
 (register-system-packages "bordeaux-threads"   '(:bt :bt2))
@@ -61,8 +59,6 @@ A Declarative Transactional Keeper of Scecrets, Notes, & Config.
 (register-system-packages "cl-cffi-cairo"      '(:cairo))
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; Subsystems
 
 (defsystem "sojrn/docs"

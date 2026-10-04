@@ -2,7 +2,6 @@
   (:use #:cl)
   (:export )
   (:documentation "Turing Machine Examples in Common Lisp"))
-
 (in-package #:learn-cl/turing)
 
 
@@ -38,9 +37,7 @@
 ;; Both outcomes contradict the prediction of `halts-p'. Therefore, `halts-p'
 ;; cannot logically exist.
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;;
+
 ;; Using `declaim' (specifically with `ftype') allows us to declare the
 ;; hypothetical interface (type signature) of `halts-p' for the logical proof,
 ;; without needing to write a fake `defun' body.

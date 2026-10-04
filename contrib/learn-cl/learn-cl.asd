@@ -10,6 +10,5 @@
 A library exibiting how to setup a library staging various learnings.
 ")
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
+
 ;;; Register Systems

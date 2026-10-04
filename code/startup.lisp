@@ -12,11 +12,9 @@
   (:export #:*sojrn-db-status*
            #:*sojrn-cache-directory*)
   (:documentation "Handles Sojrn's startup sequence."))
-
 (in-package :sojrn/startup)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
+
 ;;; Defaults: Configuration/Cache & Persistence Setup
 
 (defvar *config-mgr* (make-instance 'config-manager)
@@ -46,10 +44,8 @@ deployment database).")
 (defvar *sojrn-db-status* nil
   "Status message from the most recent database initiliazation.")
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
+
 ;;; User Config Scaffolding
-;;;
 
 (defun user-config-exists? ()
   "Check whether user-config directory and files exists"
@@ -73,10 +69,8 @@ defaults. Returns the manager's current configs."
         (add-configs *config-mgr* *config-spec*)))
   (configs *config-mgr*))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
+
 ;;; Cache & Persistence Scaffolding
-;;;
 
 (defun create-sojrn-cache-persistence ()
   "Checks for/Create cache directory & intializes the database."
@@ -84,10 +78,8 @@ defaults. Returns the manager's current configs."
   (uiop:ensure-all-directories-exist (list *db-path*))
   (initialize-database *db-path*))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
+
 ;;; Load User Config and Persistence Cache
-;;;
 
 (setf *user-config-loaded* (load-user-config))
 (setf *sojrn-db-status* (create-sojrn-cache-persistence))

@@ -133,6 +133,10 @@ Main entry point for the executable.
 
 ## Package SOJRN/LIB/SYNTAX
 
+### `JOIN-STRINGS` (function)
+Join STRINGS into one string, placing SEPARATOR between adjacent elements.
+Return "" if STRINGS is empty.
+
 ### `CONCAT` (function)
 Shorthand for CONCATENATE specialized for strings.
 
@@ -183,6 +187,8 @@ Load a snapshot into MANAGER, replacing current configs.
 
 ### `SAVE-CONFIG-SNAPSHOT` (function)
 Save current manager configuration as a named snapshot.
+
+## Package SOJRN/TESTS/SUITE
 
 ## Package SOJRN/BASE/CONFIG-MANAGER
 

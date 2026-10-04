@@ -14,7 +14,7 @@
 ;;;   DTRACE  - same syntax as TRACE
 ;;;   DUNTRACE - same syntax as UNTRACE
 
-(defpackage #:learn-cl/dtrace
+(uiop:define-package #:learn-cl/dtrace
   (:use #:cl)
   (:export #:dtrace
            #:duntrace
@@ -30,8 +30,7 @@
 (eval-when (:load-toplevel :execute)
   (shadowing-import '(dtrace duntrace) (find-package :common-lisp-user)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
+
 ;;; DTRACE and subordinate routines.
 
 (defparameter *dtrace-print-length* 7)

@@ -20,7 +20,7 @@
 ;;;   *sdraw-leading-arrow*   Initially nil.  Set to t to get leading arrows.
 ;;;
 
-(defpackage #:learn-cl/sdraw
+(uiop:define-package #:learn-cl/sdraw
   (:use #:cl)
   (:export #:sdraw
            #:sdraw-loop
@@ -31,8 +31,6 @@
 (in-package #:learn-cl/sdraw)
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; The parameters below are in units of characters (horizontal)
 ;;; and lines (vertical).  They apply to all versions of SDRAW,
 ;;; but their values may change if cons cells are being drawn as
@@ -65,8 +63,6 @@
 (defvar *line-endings* (make-array *sdraw-num-lines*))
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; SDRAW and subordinate definitions.
 
 (defun sdraw (obj &aux (*circ-detected* nil))
@@ -243,8 +239,6 @@
   (setf (aref *line-endings* row) end-col))
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; SDRAW-LOOP and subordinate definitions.
 
 (defparameter *sdraw-loop-prompt-string* "S> ")
@@ -296,8 +290,6 @@
   (format t "~A~%~%" error))
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; SCRAWL and subordinate definitions.
 
 (defparameter *scrawl-prompt-string* "SCRAWL> ")
@@ -399,8 +391,6 @@
     (and (plusp (length response))
 	 (char-upcase (char response 0)))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; The following definitions are specific to the tty implementation.
 
 (defparameter *cons-string* "[*|*]")
